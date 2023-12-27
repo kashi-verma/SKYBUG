@@ -1,0 +1,211 @@
+// Simple Calculator
+#include <iostream>
+#include <cmath>
+#include<math.h>
+using namespace std;
+
+// Define functions for each operation
+double add(double a, double b) {
+    return a + b;
+}
+
+double subtract(double a, double b) {
+    return a - b;
+}
+
+double multiply(double a, double b) {
+    return a * b;
+}
+
+double divide(double a, double b) {
+    // Check if the second operand is zero
+    if (b == 0) {
+        // Display an error message and return NaN
+        cout << "Error: Division by zero" << endl;
+        return NAN;
+    }
+    else {
+        // Return the quotient
+        return a / b;
+    }
+}
+
+double power(double a, double b) {
+    return pow(a, b);
+}
+
+double log(double a, double b) {
+    // Check if the operands are positive
+    if (a > 0 && b > 0) {
+        // Return the logarithm of the first operand with base of the second operand
+        return log(a) / log(b);
+    }
+    else {
+        // Display an error message and return NaN
+        cout << "Error: Invalid input for logarithm" << endl;
+        return NAN;
+    }
+}
+
+double sin(double a) {
+    // Return the sine of the operand in radians
+    return sin(a);
+}
+
+double cos(double a) {
+    // Return the cosine of the operand in radians
+    return cos(a);
+}
+
+double tan(double a) {
+    // Return the tangent of the operand in radians
+    return tan(a);
+}
+
+// Define the main function
+int main() {
+    // Declare variables for the choice of operation, the operands, and the result
+    int choice;
+    double a, b, result;
+    // Declare a variable for the loop condition
+    char repeat;
+    // Display the menu of operations
+    cout << "Welcome to the advanced calculator" << endl;
+    cout << "Choose an operation:" << endl;
+    cout << "1. Addition" << endl;
+    cout << "2. Subtraction" << endl;
+    cout << "3. Multiplication" << endl;
+    cout << "4. Division" << endl;
+    cout << "5. Exponentiation" << endl;
+    cout << "6. Logarithm" << endl;
+    cout << "7. Sine" << endl;
+    cout << "8. Cosine" << endl;
+    cout << "9. Tangent" << endl;
+    cout << "0. Exit" << endl;
+    // Use a do-while loop to repeat the program until the user chooses to exit
+    do {
+        // Prompt the user to enter the choice
+        cout << "Enter your choice: ";
+        cin >> choice;
+        // Use a switch statement to perform the corresponding operation
+        switch (choice) {
+            // For addition
+            case 1:
+                // Prompt the user to enter the operands
+                cout << "Enter the first operand: ";
+                cin >> a;
+                cout << "Enter the second operand: ";
+                cin >> b;
+                // Call the add function and store the result
+                result = add(a, b);
+                // Display the result
+                cout << "Result: " << result << endl;
+                break;
+            // For subtraction
+            case 2:
+                // Prompt the user to enter the operands
+                cout << "Enter the first operand: ";
+                cin >> a;
+                cout << "Enter the second operand: ";
+                cin >> b;
+                // Call the subtract function and store the result
+                result = subtract(a, b);
+                // Display the result
+                cout << "Result: " << result << endl;
+                break;
+            // For multiplication
+            case 3:
+                // Prompt the user to enter the operands
+                cout << "Enter the first operand: ";
+                cin >> a;
+                cout << "Enter the second operand: ";
+                cin >> b;
+                // Call the multiply function and store the result
+                result = multiply(a, b);
+                // Display the result
+                cout << "Result: " << result << endl;
+                break;
+            // For division
+            case 4:
+                // Prompt the user to enter the operands
+                cout << "Enter the first operand: ";
+                cin >> a;
+                cout << "Enter the second operand: ";
+                cin >> b;
+                // Call the divide function and store the result
+                result = divide(a, b);
+                // Display the result
+                cout << "Result: " << result << endl;
+                break;
+            // For exponentiation
+            case 5:
+                // Prompt the user to enter the operands
+                cout << "Enter the base: ";
+                cin >> a;
+                cout << "Enter the exponent: ";
+                cin >> b;
+                // Call the power function and store the result
+                result = power(a, b);
+                // Display the result
+                cout << "Result: " << result << endl;
+                break;
+            // For logarithm
+            case 6:
+                // Prompt the user to enter the operands
+                cout << "Enter the value: ";
+                cin >> a;
+                cout << "Enter the base: ";
+                cin >> b;
+                // Call the log function and store the result
+                result = log(a, b);
+                // Display the result
+                cout << "Result: " << result << endl;
+                break;
+            // For sine
+            case 7:
+                // Prompt the user to enter the operand
+                cout << "Enter the value in radians: ";
+                cin >> a;
+                // Call the sin function and store the result
+                result = sin(a);
+                // Display the result
+                cout << "Result: " << result << endl;
+                break;
+            // For cosine
+            case 8:
+                // Prompt the user to enter the operand
+                cout << "Enter the value in radians: ";
+                cin >> a;
+                // Call the cos function and store the result
+                result = cos(a);
+                // Display the result
+                cout << "Result: " << result << endl;
+                break;
+            // For tangent
+            case 9:
+                // Prompt the user to enter the operand
+                cout << "Enter the value in radians: ";
+                cin >> a;
+                // Call the tan function and store the result
+                result = tan(a);
+                // Display the result
+                cout << "Result: " << result << endl;
+                break;
+            // For exit
+            case 0:
+                // Display a farewell message
+                cout << "Thank you for using the advanced calculator. Goodbye!" << endl;
+                break;
+            // For invalid choice
+            default:
+                // Display an error message
+                cout << "Error: Invalid choice" << endl;
+                break;
+        }
+        // Ask the user if they want to continue
+        cout << "Do you want to continue? (y/n): ";
+        cin >> repeat;
+    } while (repeat == 'y' || repeat == 'Y'); // Repeat until the user chooses no
+    // Return 0 to indicate successful termination
+    return 0;
+}
