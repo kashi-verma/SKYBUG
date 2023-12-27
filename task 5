@@ -1,0 +1,280 @@
+// To Do List
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Define a struct to store the task data and the pointer to the next node
+struct Task {
+  string description;
+  int priority;
+  string dueDate;
+  Task* next;
+};
+
+// Declare a global pointer to the head of the list
+Task* head = NULL;
+
+// Define a function to add a new task to the end of the list
+void addTask(string description, int priority, string dueDate) {
+  // Create a new node with the given data
+  Task* newTask = new Task;
+  newTask->description = description;
+  newTask->priority = priority;
+  newTask->dueDate = dueDate;
+  newTask->next = NULL;
+
+  // If the list is empty, make the new node the head
+  if (head == NULL) {
+    head = newTask;
+  }
+  // Else, traverse the list until the last node and append the new node
+  else {
+    Task* current = head;
+    while (current->next != NULL) {
+      current = current->next;
+    }
+    current->next = newTask;
+  }
+}
+
+// Define a function to display all the tasks in the list
+void displayTasks() {
+  // If the list is empty, print a message
+  if (head == NULL) {
+    cout << "The list is empty." << endl;
+  }
+  // Else, traverse the list and print the data of each node
+  else {
+    cout << "The tasks in the list are:" << endl;
+    Task* current = head;
+    while (current != NULL) {
+      cout << "Description: " << current->description << endl;
+      cout << "Priority: " << current->priority << endl;
+      cout << "Due date: " << current->dueDate << endl;
+      cout << endl;
+      current = current->next;
+    }
+  }
+}
+
+// Define a function to delete a task from the list by its description
+void deleteTask(string description) {
+  // If the list is empty, print a message
+  if (head == NULL) {
+    cout << "The list is empty." << endl;
+  }
+  // Else, search for the node with the given description
+  else {
+    Task* current = head;
+    Task* previous = NULL;
+    bool found = false;
+    while (current != NULL && !found) {
+      // If the node is found, delete it and update the pointers
+      if (current->description == description) {
+        found = true;
+        if (previous == NULL) {
+          head = current->next;
+        }
+        else {
+          previous->next = current->next;
+        }
+        delete current;
+        cout << "The task has been deleted." << endl;
+      }
+      // Else, move to the next node
+      else {
+        previous = current;
+        current = current->next;
+      }
+    }
+    // If the node is not found, print a message
+    if (!found) {
+      cout << "The task is not in the list." << endl;
+    }
+  }
+}
+
+// Define a function to update the priority of a task by its description
+void updatePriority(string description, int newPriority) {
+  // If the list is empty, print a message
+  if (head == NULL) {
+    cout << "The list is empty." << endl;
+  }
+  // Else, search for the node with the given description
+  else {
+    Task* current = head;
+    bool found = false;
+    while (current != NULL && !found) {
+      // If the node is found, update its priority
+      if (current->description == description) {
+        found = true;
+        current->priority = newPriority;
+        cout << "The priority has been updated." << endl;
+      }
+      // Else, move to the next node
+      else {
+        current = current->next;
+      }
+    }
+    // If the node is not found, print a message
+    if (!found) {
+      cout << "The task is not in the list." << endl;
+    }
+  }
+}
+
+// Define a function to display the tasks with a given priority
+void displayByPriority(int priority) {
+  // If the list is empty, print a message
+  if (head == NULL) {
+    cout << "The list is empty." << endl;
+  }
+  // Else, traverse the list and print the data of the nodes with the given priority
+  else {
+    cout << "The tasks with priority " << priority << " are:" << endl;
+    Task* current = head;
+    bool found = false;
+    while (current != NULL) {
+      if (current->priority == priority) {
+        found = true;
+        cout << "Description: " << current->description << endl;
+        cout << "Due date: " << current->dueDate << endl;
+        cout << endl;
+      }
+      current = current->next;
+    }
+    // If no tasks with the given priority are found, print a message
+    if (!found) {
+      cout << "No tasks with priority " << priority << " are in the list." << endl;
+    }
+  }
+}
+
+// Define a function to sort the tasks by priority in ascending order
+void sortTasks() {
+  // If the list is empty or has only one node, do nothing
+  if (head == NULL || head->next == NULL) {
+    return;
+  }
+  // Else, use selection sort to sort the nodes by swapping their data
+  else {
+    Task* current = head;
+    while (current != NULL) {
+      Task* min = current;
+      Task* next = current->next;
+      while (next != NULL) {
+        if (next->priority < min->priority) {
+          min = next;
+        }
+        next = next->next;
+      }
+      // Swap the data of the current node and the minimum node
+      string tempDescription = current->description;
+      int tempPriority = current->priority;
+      string tempDueDate = current->dueDate;
+      current->description = min->description;
+      current->priority = min->priority;
+      current->dueDate = min->dueDate;
+      min->description = tempDescription;
+      min->priority = tempPriority;
+      min->dueDate = tempDueDate;
+      current = current->next;
+    }
+    cout << "The tasks have been sorted by priority." << endl;
+  }
+}
+
+// Define a function to display the menu and get the user's choice
+int getMenuChoice() {
+  int choice;
+  cout << "To do list menu:" << endl;
+  cout << "1. Add a task" << endl;
+  cout << "2. Display all tasks" << endl;
+  cout << "3. Delete a task" << endl;
+  cout << "4. Update the priority of a task" << endl;
+  cout << "5. Display tasks by priority" << endl;
+  cout << "6. Sort tasks by priority" << endl;
+  cout << "7. Exit" << endl;
+  cout << "Enter your choice: ";
+  cin >> choice;
+  return choice;
+}
+
+// Define the main function
+int main() {
+    
+  // Declare variables to store the user's input
+  string description;
+  int priority;
+  string dueDate;
+  int choice;
+
+  // Display a welcome message
+  cout << "Welcome to the to do list program." << endl;
+
+  // Loop until the user chooses to exit
+  do {
+    // Get the user's choice from the menu
+    choice = getMenuChoice();
+
+    // Perform the corresponding action based on the choice
+    switch (choice) {
+      case 1:
+        // Get the data for the new task
+        cout << "Enter the description of the task: ";
+        cin.ignore();
+        getline(cin, description);
+        cout << "Enter the priority of the task (1-5): ";
+        cin >> priority;
+        cout << "Enter the due date of the task (MM/DD/YYYY): ";
+        cin >> dueDate;
+        // Add the new task to the list
+        addTask(description, priority, dueDate);
+        cout << "The task has been added." << endl;
+        break;
+      case 2:
+        // Display all the tasks in the list
+        displayTasks();
+        break;
+      case 3:
+        // Get the description of the task to delete
+        cout << "Enter the description of the task to delete: ";
+        cin.ignore();
+        getline(cin, description);
+        // Delete the task from the list
+        deleteTask(description);
+        break;
+      case 4:
+        // Get the description and the new priority of the task to update
+        cout << "Enter the description of the task to update: ";
+        cin.ignore();
+        getline(cin, description);
+        cout << "Enter the new priority of the task (1-5): ";
+        cin >> priority;
+        // Update the priority of the task in the list
+        updatePriority(description, priority);
+        break;
+      case 5:
+        // Get the priority to display the tasks by
+        cout << "Enter the priority to display the tasks by (1-5): ";
+        cin >> priority;
+        displayByPriority(priority);
+        break;
+        case 6:
+        cout<<" sort the tasks: ";
+        sortTasks();
+        break;
+        default:
+        cout<<"invalid choice";
+        break;
+    
+        
+        
+    }
+    return -1;
+  }
+    while(1);
+    return 0;
+}
+  
+   
