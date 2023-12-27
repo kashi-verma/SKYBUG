@@ -1,0 +1,152 @@
+// Image Processing Tool
+#include <iostream>
+#include <fstream>
+
+// Define a structure to store the bitmap header
+struct BitmapHeader
+{
+    char signature[2]; // Signature "BM"
+    int fileSize; // Size of the file in bytes
+    int reserved; // Reserved for future use
+    int offset; // Offset to the pixel data
+    int headerSize; // Size of the header in bytes
+    int width; // Width of the image in pixels
+    int height; // Height of the image in pixels
+    short planes; // Number of color planes
+    short bitsPerPixel; // Number of bits per pixel
+    int compression; // Compression method
+    int imageSize; // Size of the pixel data in bytes
+    int xResolution; // Horizontal resolution in pixels per meter
+    int yResolution; // Vertical resolution in pixels per meter
+    int colorsUsed; // Number of colors used
+    int colorsImportant; // Number of important colors
+};
+
+// Define a function to read a bitmap image from a file
+bool readBitmap(const char* fileName, BitmapHeader& header, char*& data)
+{
+    // Open the file in binary mode
+    std::ifstream file(fileName, std::ios::binary);
+
+    // Check if the file is opened successfully
+    if (!file.is_open())
+    {
+        std::cout << "Error: Could not open the file " << fileName << std::endl;
+        return false;
+    }
+
+    // Read the bitmap header
+    file.read((char*)&header, sizeof(BitmapHeader));
+
+    // Check if the file is a valid bitmap
+    if (header.signature[0] != 'B' || header.signature[1] != 'M')
+    {
+        std::cout << "Error: The file " << fileName << " is not a bitmap" << std::endl;
+        file.close();
+        return false;
+    }
+
+    // Check if the bitmap is uncompressed and has 24 bits per pixel
+    if (header.compression != 0 || header.bitsPerPixel != 24)
+    {
+        std::cout << "Error: The bitmap " << fileName << " is not supported" << std::endl;
+        file.close();
+        return false;
+    }
+
+    // Allocate memory for the pixel data
+    data = new char[header.imageSize];
+
+    // Check if the memory allocation is successful
+    if (data == nullptr)
+    {
+        std::cout << "Error: Could not allocate memory for the pixel data" << std::endl;
+        file.close();
+        return false;
+    }
+
+    // Seek to the pixel data
+    file.seekg(header.offset, std::ios::beg);
+
+    // Read the pixel data
+    file.read(data, header.imageSize);
+
+    // Close the file
+    file.close();
+
+    // Return true on successful reading
+    return true;
+}
+
+// Define a function to write a bitmap image to a file
+bool writeBitmap(const char* fileName, const BitmapHeader& header, const char* data)
+{
+    // Open the file in binary mode
+    std::ofstream file(fileName, std::ios::binary);
+
+    // Check if the file is opened successfully
+    if (!file.is_open())
+    {
+        std::cout << "Error: Could not open the file " << fileName << std::endl;
+        return false;
+    }
+
+    // Write the bitmap header
+    file.write((char*)&header, sizeof(BitmapHeader));
+
+    // Write the pixel data
+    file.write(data, header.imageSize);
+
+    // Close the file
+    file.close();
+
+    // Return true on successful writing
+    return true;
+}
+
+// Define a function to invert the colors of a bitmap image
+void invertColors(char* data, int size)
+{
+    // Loop through the pixel data
+    for (int i = 0; i < size; i++)
+    {
+        // Invert each color component by subtracting it from 255
+        data[i] = 255 - data[i];
+    }
+}
+
+// Define the main function
+int main(int argc, char** argv)
+{
+    // Check if the input and output file names are provided as arguments
+    if (argc != 3)
+    {
+        std::cout << "Usage: " << argv[0] << " <input_file> <output_file>" << std::endl;
+        return -1;
+    }
+
+    // Declare a bitmap header and a pointer to the pixel data
+    BitmapHeader header;
+    char* data = nullptr;
+
+    // Read the bitmap image from the input file
+    if (!readBitmap(argv[1], header, data))
+    {
+        return -1;
+    }
+
+    // Invert the colors of the bitmap image
+    invertColors(data, header.imageSize);
+
+    // Write the bitmap image to the output file
+    if (!writeBitmap(argv[2], header, data))
+    {
+        return -1;
+    }
+
+    // Free the memory allocated for the pixel data
+    delete[] data;
+
+    // Return 0 on successful execution
+    return 0;
+}
